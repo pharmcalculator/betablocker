@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Beta Blocker Equivalent Estimator</title>
+    <style>
+        #calculateButton {
+            margin-top: 10px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            margin: auto;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+        #resetButton {
+            margin-top: 10px;
+            font-size: 18px;
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            margin: auto;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+        .unitSelection {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: 10px;
+        }
+        h1 {
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 18px;
+        }
+        select, input[type="number"] {
+            font-size: 18px;
+        }
+        .error-message {
+            color: red;
+            font-size: 16px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        #result {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        var conversionTable = {
+            acebutolol: {
+                acebutolol: 1,
+                atenolol: 0.25,
+                bisoprolol: 0.025,
+                carvedilol: 0.125,
+                labetalol: 1,
+                metoprolol: 0.5,
+                nadolol: 0.4,
+                oxprenolol: 0.4,
+                pindolol: 0.0375,
+                propranolol: 0.4,
+                timolol: 0.05,
+                nevidolol: 0.025
+            },
+            atenolol: {
+                acebutolol: 4,
+                atenolol: 1,
+                bisoprolol: 0.1,
+                carvedilol: 0.5,
+                labetalol: 4,
+                metoprolol: 2,
+                nadolol: 1.6,
+                oxprenolol: 1.6,
+                pindolol: 0.15,
+                propranolol: 1.6,
+                timolol: 0.2,
+                nevidolol: 0.1
+            },
+            bisoprolol: {
+                acebutolol: 40,
+                atenolol: 10,
+                bisoprolol: 1,
+                carvedilol: 5,
+                labetalol: 40,
+                metoprolol: 20,
+                nadolol: 16,
+                oxprenolol: 16,
+                pindolol: 1.5,
+                propranolol: 16,
+                timolol: 2,
+                nevidolol: 1
+            },
+            carvedilol: {
+                acebutolol: 8,
+                atenolol: 2,
+                bisoprolol: 0.2,
+                carvedilol: 1,
+                labetalol: 8,
+                metoprolol: 4,
+                nadolol: 3.2,
+                oxprenolol: 3.2,
+                pindolol: 0.3,
+                propranolol: 3.2,
+                timolol: 0.4,
+                nevidolol: 0.2
+            },
+            labetalol: {
+                acebutolol: 1,
+                atenolol: 0.25,
+                bisoprolol: 0.025,
+                carvedilol: 0.125,
+                labetalol: 1,
+                metoprolol: 0.5,
+                nadolol: 0.4,
+                oxprenolol: 0.4,
+                pindolol: 0.0375,
+                propranolol: 0.4,
+                timolol: 0.05,
+                nevidolol: 0.025
+            },
+            metoprolol: {
+                acebutolol: 2,
+                atenolol: 0.5,
+                bisoprolol: 0.05,
+                carvedilol: 0.25,
+                labetalol: 2,
+                metoprolol: 1,
+                nadolol: 0.8,
+                oxprenolol: 0.8,
+                pindolol: 0.075,
+                propranolol: 0.8,
+                timolol: 0.1,
+                nevidolol: 0.05
+            },
+            nadolol: {
+                acebutolol: 2.5,
+                atenolol: 0.625,
+                bisoprolol: 0.0625,
+                carvedilol: 0.3125,
+                labetalol: 2.5,
+                metoprolol: 1.25,
+                nadolol: 1,
+                oxprenolol: 1,
+                pindolol: 0.09375,
+                propranolol: 1,
+                timolol: 0.125,
+                nevidolol: 0.0625
+            },
+            oxprenolol: {
+                acebutolol: 2.5,
+                atenolol: 0.625,
+                bisoprolol: 0.0625,
+                carvedilol: 0.3125,
+                labetalol: 2.5,
+                metoprolol: 1.25,
+                nadolol: 1,
+                oxprenolol: 1,
+                pindolol: 0.09375,
+                propranolol: 1,
+                timolol: 0.125,
+                nevidolol: 0.0625
+            },
+            pindolol: {
+                acebutolol: 26.6667,
+                atenolol: 6.6667,
+                bisoprolol: 0.6667,
+                carvedilol: 3.3333,
+                labetalol: 26.6667,
+                metoprolol: 13.3333,
+                nadolol: 10.6667,
+                oxprenolol: 10.6667,
+                pindolol: 1,
+                propranolol: 10.6667,
+                timolol: 1.3333,
+                nevidolol: 0.6667
+            },
+            propranolol: {
+                acebutolol: 2.5,
+                atenolol: 0.625,
+                bisoprolol: 0.0625,
+                carvedilol: 0.3125,
+                labetalol: 2.5,
+                metoprolol: 1.25,
+                nadolol: 1,
+                oxprenolol: 1,
+                pindolol: 0.09375,
+                propranolol: 1,
+                timolol: 0.125,
+                nevidolol: 0.0625
+            },
+            timolol: {
+                acebutolol: 20,
+                atenolol: 5,
+                bisoprolol: 0.5,
+                carvedilol: 2.5,
+                labetalol: 20,
+                metoprolol: 10,
+                nadolol: 8,
+                oxprenolol: 8,
+                pindolol: 0.75,
+                propranolol: 8,
+                timolol: 1,
+                nevidolol: 0.5
+            },
+            nevidolol: {
+                acebutolol: 40,
+                atenolol: 10,
+                bisoprolol: 1,
+                carvedilol: 5,
+                labetalol: 40,
+                metoprolol: 20,
+                nadolol: 16,
+                oxprenolol: 16,
+                pindolol: 1.5,
+                propranolol: 16,
+                timolol: 2,
+                nevidolol: 1
+            }
+        };
+
+        function calculateEquivalent() {
+            var sourceDrug = document.getElementById("sourceDrug").value;
+            var targetDrug = document.getElementById("targetDrug").value;
+            var sourceDose = parseFloat(document.getElementById("sourceDose").value);
+
+            if (isNaN(sourceDose) || sourceDose <= 0) {
+                showError("Please enter a valid dose.");
+                return;
+            }
+
+            if (!(sourceDrug in conversionTable) || !(targetDrug in conversionTable[sourceDrug])) {
+                showError("Invalid source or target drug.");
+                return;
+            }
+
+            var equivalentDose = sourceDose * conversionTable[sourceDrug][targetDrug];
+
+            document.getElementById("result").innerText = "Equivalent Dose of " + targetDrug + ": " + equivalentDose.toFixed(2) + " mg";
+            clearError();
+        }
+
+        function resetCalculator() {
+            document.getElementById("sourceDrug").selectedIndex = 0;
+            document.getElementById("targetDrug").selectedIndex = 0;
+            document.getElementById("sourceDose").value = "";
+            document.getElementById("result").innerText = "";
+            clearError();
+        }
+
+        function showError(message) {
+            document.getElementById("result").innerText = ""; // Clear any previous result
+            document.getElementById("error").innerText = message;
+        }
+
+        function clearError() {
+            document.getElementById("error").innerText = "";
+        }
+    </script>
+</head>
+<body>
+    <h1>Beta Blocker Equivalent Estimator</h1>
+    <p style="text-align: center; font-size: 18px;">This calculator estimates equivalent doses of various beta blocker medications.</p>
+    <form style="text-align: center;">
+        <label for="sourceDrug">Source Drug:</label>
+        <select id="sourceDrug">
+            <option value="acebutolol">Acebutolol</option>
+            <option value="atenolol">Atenolol</option>
+            <option value="bisoprolol">Bisoprolol</option>
+            <option value="carvedilol">Carvedilol</option>
+            <option value="labetalol">Labetalol</option>
+            <option value="metoprolol">Metoprolol</option>
+            <option value="nadolol">Nadolol</option>
+            <option value="oxprenolol">Oxprenolol</option>
+            <option value="pindolol">Pindolol</option>
+            <option value="propranolol">Propranolol</option>
+            <option value="timolol">Timolol</option>
+            <option value="nevidolol">Nevidolol</option>
+        </select>
+        <br>
+        <label for="targetDrug">Target Drug:</label>
+        <select id="targetDrug">
+            <option value="acebutolol">Acebutolol</option>
+            <option value="atenolol">Atenolol</option>
+            <option value="bisoprolol">Bisoprolol</option>
+            <option value="carvedilol">Carvedilol</option>
+            <option value="labetalol">Labetalol</option>
+            <option value="metoprolol">Metoprolol</option>
+            <option value="nadolol">Nadolol</option>
+            <option value="oxprenolol">Oxprenolol</option>
+            <option value="pindolol">Pindolol</option>
+            <option value="propranolol">Propranolol</option>
+            <option value="timolol">Timolol</option>
+            <option value="nevidolol">Nevidolol</option>
+        </select>
+        <br>
+        <label for="sourceDose">Source Dose (mg):</label>
+        <input type="number" id="sourceDose" step="0.01" required>
+        <br><br>
+        <button id="calculateButton" type="button" onclick="calculateEquivalent()">Calculate Equivalent Dose</button>
+        <button id="resetButton" type="button" onclick="resetCalculator()" style="background-color: #f44336;">Reset</button>
+        <div id="result" class="error-message"></div>
+    </form>
+</body>
+</html>
